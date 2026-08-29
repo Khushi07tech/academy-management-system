@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Admin Summary</h1>
+
+<!-- TODO: Add metric cards (Active Students, Pending Renewals, Overdue Fees) -->
+
+<div>
+    <div>
+        <p>Total active students: {{ total_active_students }}</p>
+    </div>
+    <div>
+        <p>Today's classes: {{ today_classes }}</p>
+    </div>
+    <div>
+        <h2>Renewal due</h2>
+        {% for renewal_due in renewal_dues %}
+            <p>Student {{ renewal_due['student_name'] }} son/daughter of {{ renewal_due['parent_name'] }} ({{ renewal_due['whatsapp_number'] }})</p>
+        {% endfor %}
+    </div>
+    <div>
+        <h2>Due fees</h2>
+        {% for due_fee in due_fees %}
+            <p>Student {{ due_fee['student_name'] }} son/daughter of {{ due_fee['parent_name'] }} ({{ due_fee['whatsapp_number'] }}) has {{ due_fee['payment_status'] }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

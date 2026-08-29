@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Log Class</h1>
+
+<form action="{{ url_for('teacher_log_class_form') }}" method="POST">
+    <!-- TODO: <select> dropdown for student_id (populated from DB) -->
+        <select name="student_id">
+            {% for student_id in student_ids %}
+            <option value="{{ student_id['id'] }}">{{ student_id['student_name'] }}</option>
+            {% endfor %}
+        </select>
+    <!-- TODO: <select> dropdown for attendance status (Completed, Absent, Cancelled) -->
+        <select name="status">
+            <option value="Completed">Completed</option>
+            <option value="Student Absent">Student Absent</option>
+            <option value="Teacher Absent">Teacher Absent</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Rescheduled">Rescheduled</option>
+        </select>
+    <!-- TODO: <textarea> for class summary/notes -->
+        <textarea name="notes"></textarea>
+    <!-- TODO: Submit button -->
+        <button type="submit">Log class</button>
+</form>
+{% endblock %}

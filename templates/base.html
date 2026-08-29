@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+    <title>Academy Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        {% if session.get('user_id') %}
+            {% if session.get('role') == 'admin' %}
+                <!-- Display Admin Links -->
+                <a href="{{ url_for('admin_dashboard_summary') }}" class="nav-link">Admin Dashboard</a>
+                <a href="{{ url_for('admin_students_list') }}" class="nav-link">Admin Students</a>
+                <a href="{{ url_for('admin_teachers_list') }}" class="nav-link">Admin Teachers</a>
+                <a href="{{ url_for('admin_students_deactivated') }}" class="nav-link">Deactivated students</a>
+                <a href="{{ url_for('admin_teachers_deactivated') }}" class="nav-link">Deactivated teachers</a>
+            {% elif session.get('role') == 'teacher' %}
+                <!-- Display Teacher Links -->
+                <a href="{{ url_for('teacher_dashboard_classes') }}" class="nav-link">Teacher Dashboard</a>
+                <a href="{{ url_for('teacher_log_class_form') }}" class="nav-link">Log Class</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+        {% endif %} 
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

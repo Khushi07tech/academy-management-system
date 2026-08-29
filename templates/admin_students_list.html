@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Students Management</h1>
+    <div class="quick-nav">
+        <a href="#add_students" class="btn btn-secondary btn-sm">➕ Add Student</a>
+        <a href="#current_students" class="btn btn-secondary btn-sm">📋 View Current Students</a>
+    </div>
+</div>
+
+<!-- Add Student Form Card -->
+<div id="add_students" class="form-card" style="max-width: 650px;">
+    <h2 class="form-title">Add New Student</h2>
+    <form action="{{ url_for('admin_students_create') }}" method="POST">
+        
+        <div class="form-group">
+            <label>Student Information</label>
+            <input type="text" name="student_name" autofocus autocomplete="off" placeholder="Student Full Name" required>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Parent Name</label>
+                <input type="text" name="parent_name" autocomplete="off" placeholder="Parent Name" required>
+            </div>
+            <div class="form-group">
+                <label>Parent WhatsApp</label>
+                <input type="text" name="parent_whatsapp" autocomplete="off" placeholder="+92 300 1234567" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Parent Notes</label>
+            <textarea name="parent_notes" placeholder="Any special notes or instructions..." rows="2"></textarea>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Course</label>
+                <input type="text" name="course_name" placeholder="e.g. Spoken English" required>
+            </div>
+            <div class="form-group">
+                <label>Assigned Teacher</label>
+                <select name="assigned_teacher_id" required>
+                    <option value="" disabled selected>-- Select Teacher --</option>
+                    {% for teacher in teachers %}
+                        <option value="{{ teacher['id'] }}">{{ teacher['full_name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Package Fee ($ / PKR)</label>
+                <input type="number" name="package_fee" autocomplete="off" placeholder="10000" required>
+            </div>
+            <div class="form-group">
+                <label>Total Classes</label>
+                <input type="number" name="total_classes" placeholder="12" required>
+            </div>
+        </div>
+
+        <!-- Checkbox Pill Group -->
+        <div class="form-group">
+            <label>Select Class Days</label>
+            <div class="days-checkbox-group">
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Mon"> Mon</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Tue"> Tue</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Wed"> Wed</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Thu"> Thu</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Fri"> Fri</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Sat"> Sat</label>
+                <label class="day-pill"><input type="checkbox" name="class_day" value="Sun"> Sun</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Class Timing</label>
+            <input type="text" name="class_time" placeholder="e.g. 5:00 PM - 6:00 PM">
+        </div>
+
+        <button type="submit" class="btn-primary btn-block">Add New Student</button>
+    </form>
+</div>
+
+<!-- Search & Data Table Section -->
+<div id="current_students" class="table-section-card">
+    
+    <div class="table-header-tools">
+        <h2>Active Students List</h2>
+        <form action="{{ url_for('admin_students_list') }}" method="GET" class="search-form">
+            <input type="text" name="search" autocomplete="off" placeholder="Search by student name...">
+            <button type="submit" class="btn-primary btn-sm">🔍</button>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Parent & Contact</th>
+                    <th>Teacher & Contact</th>
+                    <th>Course</th>
+                    <th>Classes (Done/Total)</th>
+                    <th>Fee & Paid</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td><strong>{{ row['full_name'] }}</strong></td>
+                        <td>
+                            {{ row['parent_name'] }}<br>
+                            <small class="text-muted">📱 {{ row['whatsapp_number'] }}</small>
+                        </td>
+                        <td>
+                            {{ row['teacher_name'] }}<br>
+                            <small class="text-muted">📞 {{ row['teacher_contact'] }}</small>
+                        </td>
+                        <td>{{ row['course_name'] }}</td>
+                        <td>{{ row['completed_classes'] }} / {{ row['total_classes'] }}</td>
+                        <td>
+                            Fee: {{ row['package_fee'] }}<br>
+                            <small class="text-muted">Paid: {{ row['amount_paid'] }}</small>
+                        </td>
+                        <td>
+                            <!-- Status Badges -->
+                            <span class="badge badge-{{ row['payment_status'] | lower }}">
+                                {{ row['payment_status'] }}
+                            </span>
+                        </td>
+                        <td><small>{{ row['parent_notes'] or '-' }}</small></td>
+                        <td class="action-cell">
+                            <!-- Reassign Form -->
+                            <form action="/admin/students/reassign/{{ row['student_id'] }}" method="POST" class="inline-form">
+                                <select name="reassigned_teacher_id" required class="select-sm">
+                                    <option value="" disabled selected>Reassign...</option>
+                                    {% for teacher in teachers %}
+                                        <option value="{{ teacher['id'] }}">{{ teacher['full_name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-secondary btn-sm">Save</button>
+                            </form>
+
+                            <!-- Deactivate Form -->
+                            <form action="/admin/students/deactivate/{{ row['student_id'] }}" method="POST" class="inline-form">
+                                <button type="submit" class="btn-outline-danger btn-sm">Deactivate</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" style="text-align: center; color: var(--text-muted);">No active students found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

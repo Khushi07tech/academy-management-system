@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Teacher Dashboard</h1>
+<h2>Today's classes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Class</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class in today_classes %}
+        <tr>
+            <td>{{ class['student_name'] }}</td>
+            <td>{{ class['completed_classes'] }} / {{ class['total_classes'] }}</td>
+            <td>{{ class['class_time'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- TODO: Build table displaying assigned students -->
+<h2>Assigned Students</h2>
+<table>
+    <thead>
+        <th>Student Name</th>
+        <th>Total Classes</th>
+        <th>Classes completed</th>
+    </thead>
+    <tbody>
+        {% for student in assigned_students %}
+            <tr>
+                <td>{{ student['full_name'] }}</td>
+                <td>{{ student['total_classes'] }}</td>
+                <td>{{ student['completed_classes'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<h2>Completed Classes</h2> 
+<table>
+    <thead>
+        <th>Student Name</th>
+        <th>Class date</th>
+        <th>Status</th>
+    </thead>
+    <tbody>
+        {% for class in completed_classes %}
+            <tr>
+                <td>{{ class['full_name'] }}</td>
+                <td>{{ class['class_date'] }}</td>
+                <td>{{ class['status'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+ </table>
+<!-- TODO: Build table showing recent class logs -->
+{% endblock %}
