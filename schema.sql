@@ -83,8 +83,3 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
-SELECT * FROM parents;
-SELECT * FROM users;
-SELECT * FROM students;
-SELECT * FROM classes;
-SELECT * FROM payments;
