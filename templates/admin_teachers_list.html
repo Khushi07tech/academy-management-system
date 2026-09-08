@@ -3,10 +3,14 @@
 {% block content %}
 <div class="page-header">
     <h1>Teachers Management</h1>
+    <div class="quick-nav">
+        <a href="#add_teachers" class="btn btn-secondary btn-sm">➕ Add Teachers</a>
+        <a href="#current_teachers" class="btn btn-secondary btn-sm">📋 View Current Teachers</a>
+    </div>
 </div>
 
 <!-- Add Teacher Form Card -->
-<div class="form-card" style="max-width: 600px;">
+<div id="add_teachers" class="form-card" style="max-width: 600px;">
     <h2 class="form-title">Add New Teacher</h2>
     <form action="{{ url_for('admin_create_teacher') }}" method="POST">
         
@@ -37,7 +41,7 @@
 </div>
 
 <!-- Search & Data Table Section -->
-<div class="table-section-card">
+<div id="current_teachers" class="table-section-card">
     
     <div class="table-header-tools">
         <h2>Active Teachers</h2>

@@ -92,7 +92,10 @@ def logout():
 def admin_dashboard_summary():
     # TODO: Query database for total active students, today's classes, and renewals due
     total_active_students = db_execute("SELECT COUNT(*) AS count FROM students WHERE is_active = 1")[0]['count']
-    today_classes = db_execute("SELECT COUNT(*) AS count FROM classes WHERE class_date = DATE('now')")[0]['count']
+
+    today_code = datetime.now().strftime("%a")
+    today_classes = db_execute("SELECT COUNT(*) AS count FROM students WHERE UPPER(REPLACE(students.class_days, ' ', '')) LIKE UPPER(?)", (f"%{today_code}%",))[0]['count']
+
     renewal_dues = db_execute("SELECT students.full_name AS student_name, parents.full_name AS parent_name, parents.whatsapp_number FROM students JOIN parents ON students.parent_id = parents.id WHERE renewal_status = 'Renewal Due'")
     # TODO: Query automated alerts (overdue fees, pending payment)
     due_fees = db_execute("SELECT students.full_name AS student_name, parents.full_name AS parent_name, parents.whatsapp_number, payment_status FROM students JOIN parents ON students.parent_id = parents.id WHERE payment_status = 'Payment Pending'")
@@ -263,7 +266,7 @@ def admin_create_teacher():
 @role_required("teacher")
 def teacher_dashboard_classes():
     today_code = datetime.now().strftime("%a")
-    today_classes = db_execute("SELECT students.full_name as student_name, completed_classes, total_classes,class_time FROM students JOIN users ON  students.assigned_teacher_id = users.id WHERE assigned_teacher_id = ? AND class_days LIKE ? ORDER BY students.class_time ASC", (session.get('user_id'), f"%{today_code}%"))
+    today_classes = db_execute("SELECT students.full_name as student_name, completed_classes, total_classes,class_time FROM students JOIN users ON  students.assigned_teacher_id = users.id WHERE students.assigned_teacher_id = ? AND UPPER (REPLACE(students.class_days, ' ', '')) LIKE UPPER(?) ORDER BY students.class_time ASC", (session.get('user_id'), f"%{today_code}%"))
 
     # TODO: Fetch assigned students and recent class logs for logged-in teacher
     assigned_students = db_execute("SELECT * FROM students WHERE assigned_teacher_id = ?", (session.get('user_id'),))

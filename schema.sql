@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     is_active INTEGER DEFAULT 1,
     must_change_password INTEGER DEFAULT 1,
     class_days TEXT,
-    class_time TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -36,6 +35,9 @@ CREATE TABLE IF NOT EXISTS students (
     -- Package Configuration
     total_classes INTEGER NOT NULL DEFAULT 12,
     completed_classes INTEGER DEFAULT 0,
+    class_time TEXT NOT NULL DEFAULT '03:00 PM',
+    class_date TEXT,
+    class_days TEXT,
     
     -- Fee Tracking
     package_fee REAL NOT NULL,
@@ -82,4 +84,3 @@ CREATE TABLE IF NOT EXISTS payments (
     
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
-
