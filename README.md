@@ -101,7 +101,11 @@ Academy/
 | **Teacher** | Teacher Gamma | `teacher.gamma@academy.com` | Schedule: Mon, Wed (18:00) |
 
 ---
+## Overview & Motivation
+While working as an online English instructor, I saw how easily student tracking and daily scheduling devolved into messy manual work. 
 
+Instead of building a basic tutorial app, I used those real operational gaps as a spec to design and build a full-stack management system from scratch—retaining total IP ownership while solving a real-world software problem.
+---
 ## 🔒 Intellectual Property & Rights
 
 **Copyright © 2026.** All rights reserved.
